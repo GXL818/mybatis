@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gui.mapper.CategoryMapper">
+    <resultMap id="categoryRelationResultMap"
+               type="com.gui.pojo.ProductCategory">
+        <id column="pc_id" jdbcType="INTEGER" property="id" />
+        <result column="pc_name" jdbcType="VARCHAR" property="name" />
+        <result column="pc_sort_order" jdbcType="INTEGER" property="sortOrder" />
+        <result column="pc_image" jdbcType="VARCHAR" property="image" />
+        <result column="pc_description" jdbcType="LONGVARCHAR"   property="description" />
+        <collection property="productList" column="p_id"
+                    ofType="com.gui.pojo.Product">
+            <id column="p_id" jdbcType="INTEGER" property="id" />
+            <result column="p_name" jdbcType="VARCHAR" property="name" />
+            <result column="p_category_id" jdbcType="INTEGER" property="categoryId" />
+            <result column="p_general_explain" jdbcType="VARCHAR"
+                    property="generalExplain" />
+            <result column="p_discount" jdbcType="INTEGER" property="discount" />
+            <result column="p_shop_price" jdbcType="INTEGER" property="shopPrice" />
+            <result column="p_price" jdbcType="INTEGER" property="price" />
+            <result column="p_hot" jdbcType="INTEGER" property="hot" />
+            <result column="p_inventory_flag" jdbcType="INTEGER" property="inventoryFlag" />
+            <result column="p_default_img" jdbcType="VARCHAR" property="defaultImg" />
+        </collection>
+    </resultMap>
+    <select id="findProductCategoryById" parameterType="Integer" resultMap="categoryRelationResultMap">
+        SELECT
+              pc.id as pc_id
+             ,pc.name as pc_name
+             ,pc.sort_order as pc_sort_order
+             ,pc.image as pc_image
+             ,pc.description as pc_description
+             ,p.id as p_id
+             ,p.name as p_name
+             ,p.category_id as p_category_id
+             , p.general_explain as p_general_explain
+             ,p.discount as p_discount
+             ,p.shop_price as p_shop_price
+             ,p.price as p_price
+             ,p.hot as p_hot
+             ,p.inventory_flag as p_inventory_flag
+             ,p.default_img as p_default_img
+
+
+        FROM product_category pc
+        LEFT JOIN product p ON pc.id = p.category_id
+        WHERE pc.id = #{id}
+    </select>
+</mapper>
